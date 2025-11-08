@@ -35,29 +35,39 @@ cd backend && npm run dev
 
 ## Features
 
+### General Features
+- **Beautiful UI**: Modern, responsive interface with gradient design
+- **Statistics Dashboard**: View total visits, bookmarks, top domains, and folders
+- **Quick Access**: Click any result to open in a new tab
+- **Domain Icons**: Displays favicons for easy recognition
+<img width="1919" height="866" alt="image" src="https://github.com/user-attachments/assets/3815e861-4165-4ab0-9866-d180a428bff3" />
+<img width="1919" height="863" alt="image" src="https://github.com/user-attachments/assets/cc08e9d8-c83d-43a4-92cf-bacae4bbd192" />
+<img width="1919" height="856" alt="image" src="https://github.com/user-attachments/assets/13953365-ec6e-4146-8a18-64d20deeea9e" />
+
 ### Instant Search
 - **Unified Search**: Search across BOTH browser history and bookmarks simultaneously
 - **Real-time Results**: Results appear instantly as you type
 - **Smart Filtering**: Filter results by type (All, Bookmarks, History)
 - **Keyword Matching**: Search by page title, URL, domain, or folder name
+<img width="1918" height="860" alt="image" src="https://github.com/user-attachments/assets/71dacdfa-db5c-4604-800c-a0e2559244cb" />
+<img width="1919" height="862" alt="image" src="https://github.com/user-attachments/assets/ab0182d6-0d43-4aa5-81eb-9cd5994b21de" />
 
 ### Browser History Tracking
 - **Real-time Tracking**: Chrome extension captures browsing history as you browse
 - **Initial Sync**: Loads last 30 days of browser history on installation
 - **Visit Count**: Tracks how many times you've visited each page
 - **Live Updates**: Dashboard auto-refreshes every 10 seconds
+<img width="1919" height="874" alt="image" src="https://github.com/user-attachments/assets/d8519b43-7350-4f3c-9ef7-bb1f59a74fdd" />
+<img width="1918" height="865" alt="image" src="https://github.com/user-attachments/assets/8410b905-12f6-4580-93be-618df7d746d1" />
+
 
 ### Bookmarks Management
 - **Full Bookmark Sync**: Syncs all your Chrome bookmarks automatically
 - **Folder Organization**: Maintains your bookmark folder structure
 - **Real-time Updates**: New bookmarks are synced instantly
 - **Search by Folder**: Filter bookmarks by folder name
+<img width="1919" height="871" alt="image" src="https://github.com/user-attachments/assets/a1264044-7f6b-4f0d-8e0c-8a9b73a22ca5" />
 
-### General Features
-- **Beautiful UI**: Modern, responsive interface with gradient design
-- **Statistics Dashboard**: View total visits, bookmarks, top domains, and folders
-- **Quick Access**: Click any result to open in a new tab
-- **Domain Icons**: Displays favicons for easy recognition
 
 ## Project Structure
 
