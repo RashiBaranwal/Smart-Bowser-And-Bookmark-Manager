@@ -1,6 +1,5 @@
 import express from 'express';
 import ManualEntry from '../models/ManualEntry.js';
-import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -15,11 +14,11 @@ function extractDomain(url) {
 }
 
 // Get all manual entries with optional filters
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { query, category, limit = 100 } = req.query;
 
-    let filter = { userId: req.userId };
+    let filter = {};
 
     // Text search on title, description, keywords, url
     if (query) {
@@ -52,18 +51,18 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // Get statistics
-router.get('/stats', authenticateToken, async (req, res) => {
+router.get('/stats', async (req, res) => {
   try {
-    const totalEntries = await ManualEntry.countDocuments({ userId: req.userId });
+    const totalEntries = await ManualEntry.countDocuments({});
 
     const topCategories = await ManualEntry.aggregate([
-      { $match: { userId: req.userId } },
+      { $match: {} },
       { $group: { _id: '$category', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 }
     ]);
 
-    const recentEntries = await ManualEntry.find({ userId: req.userId })
+    const recentEntries = await ManualEntry.find({})
       .sort({ dateAdded: -1 })
       .limit(5);
 
@@ -81,7 +80,7 @@ router.get('/stats', authenticateToken, async (req, res) => {
 });
 
 // Instant search manual entries
-router.get('/search', authenticateToken, async (req, res) => {
+router.get('/search', async (req, res) => {
   try {
     const { q } = req.query;
 
@@ -90,8 +89,7 @@ router.get('/search', authenticateToken, async (req, res) => {
     }
 
     const entries = await ManualEntry.find({
-      userId: req.userId,
-      $or: [
+            $or: [
         { title: { $regex: q, $options: 'i' } },
         { description: { $regex: q, $options: 'i' } },
         { keywords: { $regex: q, $options: 'i' } },
@@ -113,7 +111,7 @@ router.get('/search', authenticateToken, async (req, res) => {
 });
 
 // Create new manual entry
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { title, url, description, keywords, imageData, category } = req.body;
 
@@ -127,8 +125,7 @@ router.post('/', authenticateToken, async (req, res) => {
     const domain = extractDomain(url);
 
     const entry = await ManualEntry.create({
-      userId: req.userId,
-      title,
+            title,
       url,
       description: description || '',
       keywords: finalKeywords,
@@ -146,11 +143,11 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Update manual entry
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { title, url, description, keywords, imageData, category } = req.body;
 
-    const entry = await ManualEntry.findOne({ _id: req.params.id, userId: req.userId });
+    const entry = await ManualEntry.findOne({ _id: req.params.id });
 
     if (!entry) {
       return res.status(404).json({ success: false, error: 'Entry not found' });
@@ -176,11 +173,10 @@ router.put('/:id', authenticateToken, async (req, res) => {
 });
 
 // Delete a manual entry
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const entry = await ManualEntry.findOneAndDelete({
       _id: req.params.id,
-      userId: req.userId
     });
 
     if (!entry) {
@@ -194,9 +190,9 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 });
 
 // Delete all manual entries
-router.delete('/', authenticateToken, async (req, res) => {
+router.delete('/', async (req, res) => {
   try {
-    await ManualEntry.deleteMany({ userId: req.userId });
+    await ManualEntry.deleteMany({});
     res.json({ success: true, data: {} });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });

@@ -3,12 +3,11 @@ import SemanticContent from '../models/SemanticContent.js';
 import embeddingService from '../services/embeddingService.js';
 import vectorDatabaseService from '../services/vectorDatabaseService.js';
 import llmService from '../services/llmService.js';
-import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Semantic search with natural language query
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const {
       query,
@@ -89,7 +88,6 @@ router.post('/', authenticateToken, async (req, res) => {
     const mongoIds = filteredResults.map(r => r.metadata.mongoId);
     const fullContent = await SemanticContent.find({
       _id: { $in: mongoIds },
-      userId: req.userId
     });
 
     // Merge results
@@ -116,7 +114,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Answer question using semantic search + LLM
-router.post('/ask', authenticateToken, async (req, res) => {
+router.post('/ask', async (req, res) => {
   try {
     const { question, limit = 5 } = req.body;
 
@@ -177,7 +175,7 @@ router.post('/ask', authenticateToken, async (req, res) => {
 });
 
 // Hybrid search (combine semantic + keyword)
-router.post('/hybrid', authenticateToken, async (req, res) => {
+router.post('/hybrid', async (req, res) => {
   try {
     const {
       query,
@@ -200,7 +198,6 @@ router.post('/hybrid', authenticateToken, async (req, res) => {
 
     // Keyword search in MongoDB (only user's content)
     let filter = {
-      userId: req.userId,
       $or: [
         { title: { $regex: query, $options: 'i' } },
         { description: { $regex: query, $options: 'i' } },
@@ -265,7 +262,6 @@ router.post('/hybrid', authenticateToken, async (req, res) => {
     const mongoIds = rankedResults.map(r => r.id);
     const fullContent = await SemanticContent.find({
       _id: { $in: mongoIds },
-      userId: req.userId
     });
 
     const enrichedResults = rankedResults.map(r => {
@@ -292,13 +288,12 @@ router.post('/hybrid', authenticateToken, async (req, res) => {
 });
 
 // Search similar content
-router.get('/similar/:id', authenticateToken, async (req, res) => {
+router.get('/similar/:id', async (req, res) => {
   try {
     const { limit = 10 } = req.query;
 
     const content = await SemanticContent.findOne({
       _id: req.params.id,
-      userId: req.userId
     });
 
     if (!content) {
@@ -333,7 +328,6 @@ router.get('/similar/:id', authenticateToken, async (req, res) => {
     const mongoIds = filteredResults.map(r => r.metadata.mongoId);
     const fullContent = await SemanticContent.find({
       _id: { $in: mongoIds },
-      userId: req.userId
     });
 
     const enrichedResults = filteredResults.map(r => {

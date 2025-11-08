@@ -1,15 +1,14 @@
 import express from 'express';
 import BrowserHistory from '../models/BrowserHistory.js';
-import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Get all browser history with optional filters
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { query, domain, startDate, endDate, limit = 100 } = req.query;
 
-    let filter = { userId: req.userId };
+    let filter = {};
 
     // Text search on url, title, or domain
     if (query) {
@@ -47,17 +46,17 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // Get browser history statistics
-router.get('/stats', authenticateToken, async (req, res) => {
+router.get('/stats', async (req, res) => {
   try {
-    const totalVisits = await BrowserHistory.countDocuments({ userId: req.userId });
+    const totalVisits = await BrowserHistory.countDocuments({});
     const topDomains = await BrowserHistory.aggregate([
-      { $match: { userId: req.userId } },
+      { $match: {} },
       { $group: { _id: '$domain', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 }
     ]);
 
-    const recentVisits = await BrowserHistory.find({ userId: req.userId })
+    const recentVisits = await BrowserHistory.find({})
       .sort({ visitTime: -1 })
       .limit(10);
 
@@ -66,7 +65,7 @@ router.get('/stats', authenticateToken, async (req, res) => {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     const visitsByDay = await BrowserHistory.aggregate([
-      { $match: { userId: req.userId, visitTime: { $gte: sevenDaysAgo } } },
+      { $match: { visitTime: { $gte: sevenDaysAgo } } },
       {
         $group: {
           _id: { $dateToString: { format: '%Y-%m-%d', date: '$visitTime' } },
@@ -91,12 +90,12 @@ router.get('/stats', authenticateToken, async (req, res) => {
 });
 
 // Create new browser history entry or update if exists
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { historyId, url, title, visitTime, domain, favicon } = req.body;
 
-    // Check if entry with this historyId already exists for this user
-    const existing = await BrowserHistory.findOne({ historyId, userId: req.userId });
+    // Check if entry with this historyId already exists
+    const existing = await BrowserHistory.findOne({ historyId });
 
     if (existing) {
       // Update visit count and visit time
@@ -106,11 +105,8 @@ router.post('/', authenticateToken, async (req, res) => {
       return res.json({ success: true, data: existing });
     }
 
-    // Create new entry with userId
-    const browserHistory = await BrowserHistory.create({
-      ...req.body,
-      userId: req.userId
-    });
+    // Create new entry
+    const browserHistory = await BrowserHistory.create(req.body);
     res.status(201).json({ success: true, data: browserHistory });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
@@ -118,7 +114,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Bulk create/update browser history entries
-router.post('/bulk', authenticateToken, async (req, res) => {
+router.post('/bulk', async (req, res) => {
   try {
     const { entries } = req.body;
 
@@ -128,7 +124,7 @@ router.post('/bulk', authenticateToken, async (req, res) => {
 
     const results = await Promise.all(
       entries.map(async (entry) => {
-        const existing = await BrowserHistory.findOne({ historyId: entry.historyId, userId: req.userId });
+        const existing = await BrowserHistory.findOne({ historyId: entry.historyId });
 
         if (existing) {
           existing.visitCount = entry.visitCount || existing.visitCount;
@@ -136,10 +132,7 @@ router.post('/bulk', authenticateToken, async (req, res) => {
           return existing.save();
         }
 
-        return BrowserHistory.create({
-          ...entry,
-          userId: req.userId
-        });
+        return BrowserHistory.create(entry);
       })
     );
 
@@ -150,11 +143,10 @@ router.post('/bulk', authenticateToken, async (req, res) => {
 });
 
 // Delete a browser history entry
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const browserHistory = await BrowserHistory.findOneAndDelete({
-      _id: req.params.id,
-      userId: req.userId
+      _id: req.params.id
     });
 
     if (!browserHistory) {
@@ -168,9 +160,9 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 });
 
 // Delete all browser history
-router.delete('/', authenticateToken, async (req, res) => {
+router.delete('/', async (req, res) => {
   try {
-    await BrowserHistory.deleteMany({ userId: req.userId });
+    await BrowserHistory.deleteMany({});
     res.json({ success: true, data: {} });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });

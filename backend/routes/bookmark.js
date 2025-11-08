@@ -1,15 +1,14 @@
 import express from 'express';
 import Bookmark from '../models/Bookmark.js';
-import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Get all bookmarks with optional filters
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { query, folder, domain, limit = 100 } = req.query;
 
-    let filter = { userId: req.userId };
+    let filter = {};
 
     // Text search on title, url, folder, or tags
     if (query) {
@@ -46,25 +45,25 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // Get bookmark statistics
-router.get('/stats', authenticateToken, async (req, res) => {
+router.get('/stats', async (req, res) => {
   try {
-    const totalBookmarks = await Bookmark.countDocuments({ userId: req.userId });
+    const totalBookmarks = await Bookmark.countDocuments({});
 
     const topFolders = await Bookmark.aggregate([
-      { $match: { userId: req.userId } },
+      { $match: {} },
       { $group: { _id: '$parentFolder', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 }
     ]);
 
     const topDomains = await Bookmark.aggregate([
-      { $match: { userId: req.userId } },
+      { $match: {} },
       { $group: { _id: '$domain', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 }
     ]);
 
-    const recentBookmarks = await Bookmark.find({ userId: req.userId })
+    const recentBookmarks = await Bookmark.find({})
       .sort({ dateAdded: -1 })
       .limit(10);
 
@@ -83,7 +82,7 @@ router.get('/stats', authenticateToken, async (req, res) => {
 });
 
 // Search bookmarks with instant results
-router.get('/search', authenticateToken, async (req, res) => {
+router.get('/search', async (req, res) => {
   try {
     const { q } = req.query;
 
@@ -92,8 +91,7 @@ router.get('/search', authenticateToken, async (req, res) => {
     }
 
     const bookmarks = await Bookmark.find({
-      userId: req.userId,
-      $or: [
+            $or: [
         { title: { $regex: q, $options: 'i' } },
         { url: { $regex: q, $options: 'i' } },
         { parentFolder: { $regex: q, $options: 'i' } },
@@ -115,9 +113,9 @@ router.get('/search', authenticateToken, async (req, res) => {
 });
 
 // Get folders list
-router.get('/folders', authenticateToken, async (req, res) => {
+router.get('/folders', async (req, res) => {
   try {
-    const folders = await Bookmark.distinct('parentFolder', { userId: req.userId });
+    const folders = await Bookmark.distinct('parentFolder', {});
     res.json({
       success: true,
       data: folders
@@ -128,12 +126,12 @@ router.get('/folders', authenticateToken, async (req, res) => {
 });
 
 // Create or update bookmark
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { bookmarkId } = req.body;
 
     // Check if bookmark already exists for this user
-    const existing = await Bookmark.findOne({ bookmarkId, userId: req.userId });
+    const existing = await Bookmark.findOne({ bookmarkId });
 
     if (existing) {
       // Update existing bookmark
@@ -145,7 +143,6 @@ router.post('/', authenticateToken, async (req, res) => {
     // Create new bookmark with userId
     const bookmark = await Bookmark.create({
       ...req.body,
-      userId: req.userId
     });
     res.status(201).json({ success: true, data: bookmark });
   } catch (error) {
@@ -154,7 +151,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // Bulk create/update bookmarks
-router.post('/bulk', authenticateToken, async (req, res) => {
+router.post('/bulk', async (req, res) => {
   try {
     const { bookmarks } = req.body;
 
@@ -164,7 +161,7 @@ router.post('/bulk', authenticateToken, async (req, res) => {
 
     const results = await Promise.all(
       bookmarks.map(async (bookmark) => {
-        const existing = await Bookmark.findOne({ bookmarkId: bookmark.bookmarkId, userId: req.userId });
+        const existing = await Bookmark.findOne({ bookmarkId: bookmark.bookmarkId });
 
         if (existing) {
           Object.assign(existing, bookmark);
@@ -173,8 +170,7 @@ router.post('/bulk', authenticateToken, async (req, res) => {
 
         return Bookmark.create({
           ...bookmark,
-          userId: req.userId
-        });
+            });
       })
     );
 
@@ -185,11 +181,10 @@ router.post('/bulk', authenticateToken, async (req, res) => {
 });
 
 // Delete a bookmark
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const bookmark = await Bookmark.findOneAndDelete({
       _id: req.params.id,
-      userId: req.userId
     });
 
     if (!bookmark) {
@@ -203,9 +198,9 @@ router.delete('/:id', authenticateToken, async (req, res) => {
 });
 
 // Delete all bookmarks
-router.delete('/', authenticateToken, async (req, res) => {
+router.delete('/', async (req, res) => {
   try {
-    await Bookmark.deleteMany({ userId: req.userId });
+    await Bookmark.deleteMany({});
     res.json({ success: true, data: {} });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });

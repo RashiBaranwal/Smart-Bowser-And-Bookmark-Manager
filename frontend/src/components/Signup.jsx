@@ -33,8 +33,9 @@ function Signup({ onToggleLogin }) {
 
     if (!result.success) {
       setError(result.error);
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   return (

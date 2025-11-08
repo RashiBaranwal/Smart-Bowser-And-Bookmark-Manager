@@ -7,7 +7,6 @@ import embeddingService from '../services/embeddingService.js';
 import vectorDatabaseService from '../services/vectorDatabaseService.js';
 import contentProcessingService from '../services/contentProcessingService.js';
 import llmService from '../services/llmService.js';
-import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -55,7 +54,7 @@ function extractDomain(url) {
 }
 
 // Ingest content from URL
-router.post('/ingest/url', authenticateToken, async (req, res) => {
+router.post('/ingest/url', async (req, res) => {
   try {
     const { url, category, keywords } = req.body;
 
@@ -86,7 +85,6 @@ router.post('/ingest/url', authenticateToken, async (req, res) => {
 
     // Create database entry with userId
     const content = await SemanticContent.create({
-      userId: req.userId,
       title: processedContent.title,
       description: processedContent.description,
       content: processedContent.content,
@@ -152,7 +150,7 @@ router.post('/ingest/url', authenticateToken, async (req, res) => {
 });
 
 // Ingest file (PDF, image)
-router.post('/ingest/file', authenticateToken, upload.single('file'), async (req, res) => {
+router.post('/ingest/file', upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ success: false, error: 'File is required' });
@@ -194,7 +192,6 @@ router.post('/ingest/file', authenticateToken, upload.single('file'), async (req
 
     // Create database entry with userId
     const content = await SemanticContent.create({
-      userId: req.userId,
       title: title || processedContent.title,
       description: description || processedContent.description,
       content: processedContent.content,
@@ -260,7 +257,7 @@ router.post('/ingest/file', authenticateToken, upload.single('file'), async (req
 });
 
 // Ingest plain text/note
-router.post('/ingest/text', authenticateToken, async (req, res) => {
+router.post('/ingest/text', async (req, res) => {
   try {
     const { title, description, text, category, keywords } = req.body;
 
@@ -288,7 +285,6 @@ router.post('/ingest/text', authenticateToken, async (req, res) => {
 
     // Create database entry with userId
     const content = await SemanticContent.create({
-      userId: req.userId,
       title: processedContent.title,
       description: processedContent.description,
       content: processedContent.content,
@@ -350,11 +346,11 @@ router.post('/ingest/text', authenticateToken, async (req, res) => {
 });
 
 // Get all semantic content
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { contentType, category, limit = 100 } = req.query;
 
-    let filter = { userId: req.userId };
+    let filter = {};
 
     if (contentType) {
       filter.contentType = contentType;
@@ -380,18 +376,18 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // Get statistics
-router.get('/stats', authenticateToken, async (req, res) => {
+router.get('/stats', async (req, res) => {
   try {
-    const totalContent = await SemanticContent.countDocuments({ userId: req.userId });
+    const totalContent = await SemanticContent.countDocuments({});
     const indexedContent = await SemanticContent.countDocuments({ userId: req.userId, isIndexed: true });
 
     const byType = await SemanticContent.aggregate([
-      { $match: { userId: req.userId } },
+      { $match: {} },
       { $group: { _id: '$contentType', count: { $sum: 1 } } }
     ]);
 
     const byCategory = await SemanticContent.aggregate([
-      { $match: { userId: req.userId } },
+      { $match: {} },
       { $group: { _id: '$category', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 }
@@ -417,9 +413,9 @@ router.get('/stats', authenticateToken, async (req, res) => {
 });
 
 // Delete semantic content
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    const content = await SemanticContent.findOne({ _id: req.params.id, userId: req.userId });
+    const content = await SemanticContent.findOne({ _id: req.params.id });
 
     if (!content) {
       return res.status(404).json({ success: false, error: 'Content not found' });

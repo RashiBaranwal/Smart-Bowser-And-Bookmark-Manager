@@ -1,42 +1,14 @@
 import { useState } from 'react';
-import { useAuth } from './context/AuthContext';
 import Dashboard from './components/Dashboard';
 import Bookmarks from './components/Bookmarks';
 import InstantSearch from './components/InstantSearch';
 import SemanticSearch from './components/SemanticSearch';
 import AddEntry from './components/AddEntry';
 import Sidebar from './components/Sidebar';
-import Login from './components/Login';
-import Signup from './components/Signup';
 import './App.css';
 
 function App() {
   const [activeView, setActiveView] = useState('ai-search');
-  const [showSignup, setShowSignup] = useState(false);
-  const { user, logout, loading } = useAuth();
-
-  console.log('App render - loading:', loading, 'user:', user);
-
-  if (loading) {
-    console.log('Showing loading screen');
-    return (
-      <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  if (!user) {
-    console.log('No user, showing auth screen');
-    return showSignup ? (
-      <Signup onToggleLogin={() => setShowSignup(false)} />
-    ) : (
-      <Login onToggleSignup={() => setShowSignup(true)} />
-    );
-  }
-
-  console.log('User authenticated, showing dashboard');
 
   return (
     <div className="App">
@@ -74,12 +46,6 @@ function App() {
             onClick={() => setActiveView('bookmarks')}
           >
             Bookmarks
-          </button>
-        </div>
-        <div className="user-menu">
-          <span className="user-name">👤 {user.name}</span>
-          <button className="logout-btn" onClick={logout}>
-            Logout
           </button>
         </div>
       </nav>
