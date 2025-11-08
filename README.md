@@ -44,6 +44,9 @@ cd backend && npm run dev
 <img width="1919" height="863" alt="image" src="https://github.com/user-attachments/assets/cc08e9d8-c83d-43a4-92cf-bacae4bbd192" />
 <img width="1919" height="856" alt="image" src="https://github.com/user-attachments/assets/13953365-ec6e-4146-8a18-64d20deeea9e" />
 
+### Extension
+<img width="749" height="653" alt="image" src="https://github.com/user-attachments/assets/fd46c521-8d7d-48bf-b286-7aaea85b64dd" />
+
 ### Instant Search
 - **Unified Search**: Search across BOTH browser history and bookmarks simultaneously
 - **Real-time Results**: Results appear instantly as you type
