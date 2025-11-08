@@ -337,6 +337,8 @@ For issues or questions, please check the troubleshooting section above.
 
 ---
 
-Made with MERN Stack + Chrome Extensions API
-#   S m a r t - B o w s e r - A n d - B o o k m a r k - M a n a g e r  
- 
+Made with love using MERN Stack + Chrome Extensions API
+
+## Project Title
+
+**Smart Browser and Bookmark Manager** - A comprehensive browser history and bookmark management system with AI-powered semantic search
