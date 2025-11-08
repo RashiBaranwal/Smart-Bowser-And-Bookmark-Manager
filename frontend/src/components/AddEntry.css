@@ -1,0 +1,257 @@
+.add-entry-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.add-entry-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.add-entry-header h1 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.add-entry-header p {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+}
+
+.add-entry-form {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.required {
+  color: #e74c3c;
+}
+
+.hint {
+  color: #95a5a6;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.image-upload-area {
+  position: relative;
+}
+
+.image-input {
+  display: none;
+}
+
+.image-upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border: 2px dashed #bdc3c7;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #7f8c8d;
+}
+
+.image-upload-label:hover {
+  border-color: #667eea;
+  background-color: #f8f9fa;
+}
+
+.image-upload-label svg {
+  margin-bottom: 10px;
+  color: #95a5a6;
+}
+
+.image-upload-label span {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.image-hint {
+  font-size: 0.85rem !important;
+  color: #95a5a6 !important;
+  font-weight: 400 !important;
+  margin-top: 5px;
+}
+
+.image-preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.image-preview {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.remove-image-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.remove-image-btn:hover {
+  background-color: #c0392b;
+}
+
+.message {
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tips-box {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cc 100%);
+  padding: 25px;
+  border-radius: 10px;
+  margin-top: 30px;
+  border: 2px solid #ffd966;
+}
+
+.tips-box h3 {
+  color: #d68910;
+  margin: 0 0 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tips-box h3:before {
+  content: "💡";
+  font-size: 1.5rem;
+}
+
+.tips-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tips-box li {
+  padding: 8px 0;
+  padding-left: 25px;
+  position: relative;
+  color: #7f6007;
+  line-height: 1.5;
+}
+
+.tips-box li:before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: #d68910;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .add-entry-container {
+    padding: 15px;
+  }
+
+  .add-entry-form {
+    padding: 25px 20px;
+  }
+
+  .add-entry-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .add-entry-header p {
+    font-size: 1rem;
+  }
+
+  .image-upload-label {
+    padding: 30px 20px;
+  }
+
+  .submit-btn {
+    font-size: 1rem;
+  }
+}

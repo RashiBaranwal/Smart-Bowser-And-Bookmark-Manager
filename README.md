@@ -1,6 +1,37 @@
-# Browser History & Bookmarks Retriever
+# Browser History & Bookmarks Retriever + Semantic Search
 
-A full-stack MERN application that tracks and displays your Chrome browser history AND bookmarks in real-time with a beautiful dashboard interface and instant search capabilities.
+A full-stack MERN application that tracks and displays your Chrome browser history AND bookmarks in real-time with a beautiful dashboard interface and instant search capabilities. **Now with AI-powered semantic search!**
+
+## 🚀 NEW: Semantic Search System
+
+Your app now includes a powerful semantic search system that lets you search your saved content using natural language!
+
+### Key Features
+- **🔍 Natural Language Search**: Ask questions like "articles about AI from last month"
+- **🧠 AI-Powered**: Uses Google Gemini (free) for embeddings and LLM features
+- **📚 Multi-Format Support**: Web pages, PDFs, images (OCR), and notes
+- **💡 Smart Answers**: Ask questions and get answers from your saved content
+- **🎯 Hybrid Search**: Combines semantic understanding with keyword matching
+- **📊 Auto-Categorization**: Automatically categorizes and tags content
+
+### Quick Start
+```bash
+# 1. Install ChromaDB
+pip install chromadb
+
+# 2. Start ChromaDB
+chroma run --host localhost --port 8000
+
+# 3. Get free API key from https://aistudio.google.com/app/apikey
+
+# 4. Add to backend/.env
+GOOGLE_API_KEY=your_key_here
+
+# 5. Start backend
+cd backend && npm run dev
+```
+
+👉 **[Full Semantic Search Guide](SEMANTIC_SEARCH_GUIDE.md)** | **[Quick Start](QUICK_START.md)**
 
 ## Features
 

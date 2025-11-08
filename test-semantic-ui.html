@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Search Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            white-space: pre-wrap;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .loading {
+            color: #667eea;
+            font-style: italic;
+        }
+        .error {
+            color: #dc3545;
+            border-left-color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Semantic Search Tester</h1>
+        <p class="subtitle">Test your AI-powered search system</p>
+
+        <!-- Ingest URL -->
+        <div class="section">
+            <h2>1. Ingest Content from URL</h2>
+            <input type="text" id="urlInput" placeholder="Enter URL (e.g., https://en.wikipedia.org/wiki/Machine_learning)">
+            <button onclick="ingestURL()">📥 Ingest URL</button>
+            <div id="ingestResult"></div>
+        </div>
+
+        <!-- Semantic Search -->
+        <div class="section">
+            <h2>2. Semantic Search</h2>
+            <input type="text" id="searchQuery" placeholder="Ask a question (e.g., What is machine learning?)">
+            <button onclick="semanticSearch()">🔍 Search</button>
+            <div id="searchResult"></div>
+        </div>
+
+        <!-- Question Answering -->
+        <div class="section">
+            <h2>3. Ask a Question</h2>
+            <input type="text" id="questionInput" placeholder="Ask about your saved content">
+            <button onclick="askQuestion()">💬 Ask</button>
+            <div id="questionResult"></div>
+        </div>
+
+        <!-- Ingest Text Note -->
+        <div class="section">
+            <h2>4. Save a Note</h2>
+            <input type="text" id="noteTitle" placeholder="Note title">
+            <textarea id="noteText" rows="4" placeholder="Enter your note content..."></textarea>
+            <button onclick="ingestNote()">📝 Save Note</button>
+            <div id="noteResult"></div>
+        </div>
+
+        <!-- Stats -->
+        <div class="section">
+            <h2>5. View Statistics</h2>
+            <button onclick="getStats()">📊 Get Stats</button>
+            <div id="statsResult"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        function showLoading(elementId) {
+            document.getElementById(elementId).innerHTML = '<div class="result loading">Loading...</div>';
+        }
+
+        function showResult(elementId, data, isError = false) {
+            const resultDiv = document.getElementById(elementId);
+            const className = isError ? 'result error' : 'result';
+            resultDiv.innerHTML = `<div class="${className}">${JSON.stringify(data, null, 2)}</div>`;
+        }
+
+        async function ingestURL() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+
+            showLoading('ingestResult');
+
+            try {
+                const response = await fetch(`${API_BASE}/semantic-content/ingest/url`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+                showResult('ingestResult', data);
+            } catch (error) {
+                showResult('ingestResult', { error: error.message }, true);
+            }
+        }
+
+        async function semanticSearch() {
+            const query = document.getElementById('searchQuery').value;
+            if (!query) {
+                alert('Please enter a search query');
+                return;
+            }
+
+            showLoading('searchResult');
+
+            try {
+                const response = await fetch(`${API_BASE}/semantic-search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query,
+                        limit: 5,
+                        summarize: true
+                    })
+                });
+
+                const data = await response.json();
+                showResult('searchResult', data);
+            } catch (error) {
+                showResult('searchResult', { error: error.message }, true);
+            }
+        }
+
+        async function askQuestion() {
+            const question = document.getElementById('questionInput').value;
+            if (!question) {
+                alert('Please enter a question');
+                return;
+            }
+
+            showLoading('questionResult');
+
+            try {
+                const response = await fetch(`${API_BASE}/semantic-search/ask`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question })
+                });
+
+                const data = await response.json();
+                showResult('questionResult', data);
+            } catch (error) {
+                showResult('questionResult', { error: error.message }, true);
+            }
+        }
+
+        async function ingestNote() {
+            const title = document.getElementById('noteTitle').value;
+            const text = document.getElementById('noteText').value;
+
+            if (!text) {
+                alert('Please enter note content');
+                return;
+            }
+
+            showLoading('noteResult');
+
+            try {
+                const response = await fetch(`${API_BASE}/semantic-content/ingest/text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title || 'Untitled Note',
+                        text
+                    })
+                });
+
+                const data = await response.json();
+                showResult('noteResult', data);
+            } catch (error) {
+                showResult('noteResult', { error: error.message }, true);
+            }
+        }
+
+        async function getStats() {
+            showLoading('statsResult');
+
+            try {
+                const response = await fetch(`${API_BASE}/semantic-content/stats`);
+                const data = await response.json();
+                showResult('statsResult', data);
+            } catch (error) {
+                showResult('statsResult', { error: error.message }, true);
+            }
+        }
+    </script>
+</body>
+</html>

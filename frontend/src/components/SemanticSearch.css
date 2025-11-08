@@ -1,0 +1,379 @@
+.semantic-search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.semantic-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.semantic-header h2 {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.semantic-subtitle {
+  color: #666;
+  font-size: 1rem;
+}
+
+.semantic-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.tab-btn {
+  padding: 1rem 2rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.tab-btn:hover {
+  color: #667eea;
+}
+
+.tab-btn.active {
+  color: #667eea;
+  border-bottom-color: #667eea;
+}
+
+.search-section, .ask-section {
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.search-input-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.semantic-input {
+  flex: 1;
+  padding: 1rem;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  transition: border-color 0.3s;
+}
+
+.semantic-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.semantic-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+  white-space: nowrap;
+}
+
+.semantic-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.semantic-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.search-examples {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.example-label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.example-btn {
+  padding: 0.5rem 1rem;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.example-btn:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.results-container, .answer-container {
+  margin-top: 2rem;
+}
+
+.results-header {
+  margin-bottom: 1.5rem;
+}
+
+.results-header h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.summary-box {
+  padding: 1rem;
+  background: #f0f7ff;
+  border-left: 4px solid #667eea;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.result-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+
+.result-card:hover {
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  border-color: #667eea;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.result-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.result-favicon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.result-card h4 {
+  color: #333;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.result-score {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.result-description {
+  color: #666;
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.result-url {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: block;
+  margin: 0.5rem 0;
+  word-break: break-all;
+}
+
+.result-url:hover {
+  text-decoration: underline;
+}
+
+.result-meta {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.meta-badge {
+  background: #f0f0f0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.meta-date {
+  color: #999;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.answer-box {
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.answer-box h3 {
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.answer-text {
+  color: #333;
+  line-height: 1.8;
+  font-size: 1.05rem;
+  white-space: pre-wrap;
+}
+
+.sources-box {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.sources-box h4 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.sources-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.source-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.source-item:last-child {
+  border-bottom: none;
+}
+
+.source-link {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.source-link:hover {
+  text-decoration: underline;
+}
+
+.source-score {
+  margin-left: auto;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.tips-box {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  text-align: left;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tips-box h4 {
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.tips-box ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  line-height: 1.8;
+}
+
+.tips-box li {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .semantic-search-container {
+    padding: 1rem;
+  }
+
+  .search-input-group {
+    flex-direction: column;
+  }
+
+  .semantic-btn {
+    width: 100%;
+  }
+
+  .result-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .result-score {
+    align-self: flex-start;
+  }
+}
